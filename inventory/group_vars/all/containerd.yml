@@ -1,0 +1,11 @@
+---
+# Please see roles/container-engine/containerd/defaults/main.yml for more configuration options
+
+# containerd_metrics_address: ""
+
+# containerd_metrics_grpc_histogram: false
+
+# containerd_registries:
+#   "docker.io": "https://registry-1.docker.io"
+
+# containerd_max_container_log_line_size: -1
