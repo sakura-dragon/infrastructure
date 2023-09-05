@@ -11,3 +11,14 @@
       kubernetes.core.k8s:
         state: present
         template: 'cluster-vars.yaml.j2'
+
+- name: Post Cluster Node Tasks
+  hosts: kube_node
+  tasks:
+
+    - name: Install longhorn requirements
+      become: true
+      ansible.builtin.apt:
+        pkg:
+        - open-iscsi
+        - nfs-common
