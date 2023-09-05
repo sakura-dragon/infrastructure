@@ -1,1 +1,4 @@
 -r https://raw.githubusercontent.com/kubernetes-sigs/kubespray/master/requirements.txt
+kubernetes>=12.0.0
+PyYAML>=3.11
+jsonpatch

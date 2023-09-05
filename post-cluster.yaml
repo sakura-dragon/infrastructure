@@ -1,0 +1,13 @@
+- name: Post Cluster Tasks
+  hosts: localhost
+  tasks:
+    
+    - name: Load cluster_vars
+      ansible.builtin.include_vars:
+        file: cluster-vars.yaml
+        name: cluster_vars
+
+    - name: Create cluster vars secret
+      kubernetes.core.k8s:
+        state: present
+        template: 'cluster-vars.yaml.j2'

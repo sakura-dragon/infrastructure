@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-vars
+  namespace: flux-system
+type: Opaque
+data:
+{% for key, value in cluster_vars.items() %}
+  {{ key }}: {{ value | b64encode }}
+{% endfor %}
