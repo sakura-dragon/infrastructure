@@ -1,0 +1,17 @@
+- name: Update packages
+  hosts: all
+  tasks:
+
+    - name: Update apt cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: update_packages | default(true)
+
+    - name: Update all packages to their latest version
+      become: true
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+      when: upgrade_packages | default(true)
