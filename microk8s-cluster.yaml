@@ -1,0 +1,4 @@
+- name: Install microk8s
+  hosts: microk8s_node
+  roles:
+  - microk8s

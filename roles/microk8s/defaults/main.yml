@@ -1,0 +1,4 @@
+---
+# defaults file for roles/microk8s
+microk8s_channel: 1.27/stable
+microk8s_setup_ansible_user: true

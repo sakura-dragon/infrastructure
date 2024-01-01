@@ -1,0 +1,73 @@
+---
+# tasks file for roles/microk8s
+- name: Ensure snapd is installed
+  ansible.builtin.apt:
+    name: snapd
+    state: present
+  become: true
+
+- name: Install Microk8s snap
+  community.general.snap:
+    name: microk8s
+    classic: true
+    channel: "{{ microk8s_channel }}"
+  become: true
+
+- name: Current (non-root) user
+  ansible.builtin.set_fact:
+    current_user: "{{ ansible_user_id }}"
+
+- name: Add current user to microk8s group
+  ansible.builtin.user:
+    name: "{{ current_user }}"
+    groups: microk8s
+    append: yes
+  when: microk8s_setup_ansible_user
+  become: true
+
+- name: Recursively change ownership of a directory
+  ansible.builtin.file:
+    path: /home/{{ current_user }}/.kube
+    state: directory
+    recurse: yes
+    owner: "{{ current_user }}"
+    group: "{{ current_user }}"
+  when: microk8s_setup_ansible_user
+  become: true
+
+- name: Ensure base symlink directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  become: true
+  loop:
+     - /etc/cni
+     - /opt/cni
+
+- name: soft-link the CNI Config directory
+  ansible.builtin.file:
+    src: /var/snap/microk8s/current/args/cni-network
+    dest: /etc/cni/net.d
+    state: link
+  become: true
+
+- name: soft-link the CNI Binary directory
+  ansible.builtin.file:
+    src: /var/snap/microk8s/current/opt/cni/bin
+    dest: /opt/cni/bin
+    state: link
+  become: true
+
+# Looks like this is already done
+# - name: soft-link the kubelet directory
+#   ansible.builtin.file:
+#     src: /var/snap/microk8s/common/var/lib/kubelet
+#     dest: /var/lib/kubelet
+#     state: link
+#   become: true
+
+# remove calico
+# touch /var/snap/microk8s/current/var/lock/cni-loaded
+# sudo microk8s kubectl delete -f /var/snap/microk8s/current/args/cni-network/cni.yaml
+# rm /var/snap/microk8s/current/args/cni-network/*
