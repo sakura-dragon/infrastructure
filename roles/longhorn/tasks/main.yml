@@ -1,0 +1,8 @@
+---
+# tasks file for roles/longhorn
+- name: Install longhorn host packages
+  ansible.builtin.apt:
+    pkg:
+    - open-iscsi
+    - nfs-common
+  become: true
