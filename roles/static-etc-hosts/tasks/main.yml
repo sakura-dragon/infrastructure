@@ -1,0 +1,11 @@
+---
+# tasks file for roles/static-etc-hosts
+- name: Add mappings to /etc/hosts
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    block: |
+      {% for item in ansible_play_batch %}
+      {{ hostvars[item].ansible_default_ipv4.address }}   {{ item }}    
+      {% endfor %}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+  become: true

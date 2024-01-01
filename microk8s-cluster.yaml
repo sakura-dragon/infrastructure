@@ -2,3 +2,4 @@
   hosts: microk8s_node
   roles:
   - microk8s
+  - static-etc-hosts
