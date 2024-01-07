@@ -1,0 +1,32 @@
+---
+# tasks file for roles/cilium-cni
+- name: Cilium assumes [/opt/cni] is owned by root
+  ansible.builtin.file:
+    path: /opt/cni
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+
+- name: Install Cilium
+  block:
+  - name: Copy Cilium Helm chart
+    become: false
+    ansible.posix.synchronize:
+      src: "files/cilium/"
+      dest: "/tmp/cni-cilium"
+      delete: true
+      recursive: true
+
+  - name: Helm install Cilium
+    kubernetes.core.helm:
+      release_name: cilium
+      chart_ref: "/tmp/cni-cilium"
+      release_namespace: kube-system
+      dependency_update: true
+      kubeconfig: "{{ cilium_cni_kubeconfig }}"
+      # values:
+      #   ipam:
+      #     operator:
+      #       clusterPoolIPv4PodCIDR: "{{ kube_pods_subnet }}"
+  when: ansible_hostname == groups['kube_control_plane'][0]

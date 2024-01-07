@@ -4,15 +4,13 @@ bin_dir: /usr/local/bin
 
 ## External LB example config
 ## apiserver_loadbalancer_domain_name: "elb.some.domain"
-# loadbalancer_apiserver:
-#   address: 1.2.3.4
-#   port: 1234
+loadbalancer_apiserver:
+  address: "{{ kube_vip_address }}"
+  port: 6443
 
 ## Internal loadbalancers for apiservers
-# Running with a non-HA cluster as the control plane node is running in a virtualized environment
+# Running with kube-VIP
 loadbalancer_apiserver_localhost: false
-# valid options are "nginx" or "haproxy"
-# loadbalancer_apiserver_type: nginx  # valid values "nginx" or "haproxy"
 
 ## Local loadbalancer should use this port
 ## And must be set port 6443

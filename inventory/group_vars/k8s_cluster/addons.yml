@@ -1,5 +1,5 @@
 ---
-helm_enabled: false
+helm_enabled: true
 registry_enabled: false
 metrics_server_enabled: false
 local_path_provisioner_enabled: false
@@ -15,3 +15,15 @@ metallb_speaker_enabled: "{{ metallb_enabled }}"
 argocd_enabled: false
 krew_enabled: false
 krew_root_dir: "/usr/local/krew"
+
+kube_vip_enabled: true
+kube_vip_arp_enabled: true
+kube_vip_controlplane_enabled: true
+kube_vip_address: 10.0.0.100
+# Defined in all/all.yml
+# loadbalancer_apiserver:
+#   address: "{{ kube_vip_address }}"
+#   port: 6443
+# Appears to be optional
+# kube_vip_interface: bond0
+kube_vip_services_enabled: false

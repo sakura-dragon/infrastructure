@@ -1,0 +1,5 @@
+---
+# defaults file for roles/cilium-cni
+
+# Assumes running once on the first k8s controller
+cilium_cni_kubeconfig: /etc/kubernetes/admin.conf

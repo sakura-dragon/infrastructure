@@ -1,2 +1,11 @@
 - name: Install Kubernetes
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
+  tags:
+  - k8s
+
+- name: Install CNI
+  hosts: k8s_cluster
+  roles:
+  - cilium-cni
+  tags:
+  - cni
