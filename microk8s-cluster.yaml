@@ -3,3 +3,4 @@
   roles:
   - microk8s
   - static-etc-hosts
+  - longhorn
