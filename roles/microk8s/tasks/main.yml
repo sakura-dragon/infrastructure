@@ -35,29 +35,29 @@
   when: microk8s_setup_ansible_user
   become: true
 
-- name: Ensure base symlink directories exist
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    mode: '0755'
-  become: true
-  loop:
-     - /etc/cni
-     - /opt/cni
+# - name: Ensure base symlink directories exist
+#   ansible.builtin.file:
+#     path: "{{ item }}"
+#     state: directory
+#     mode: '0755'
+#   become: true
+#   loop:
+#      - /etc/cni
+#      - /opt/cni
 
-- name: soft-link the CNI Config directory
-  ansible.builtin.file:
-    src: /var/snap/microk8s/current/args/cni-network
-    dest: /etc/cni/net.d
-    state: link
-  become: true
+# - name: soft-link the CNI Config directory
+#   ansible.builtin.file:
+#     src: /var/snap/microk8s/current/args/cni-network
+#     dest: /etc/cni/net.d
+#     state: link
+#   become: true
 
-- name: soft-link the CNI Binary directory
-  ansible.builtin.file:
-    src: /var/snap/microk8s/current/opt/cni/bin
-    dest: /opt/cni/bin
-    state: link
-  become: true
+# - name: soft-link the CNI Binary directory
+#   ansible.builtin.file:
+#     src: /var/snap/microk8s/current/opt/cni/bin
+#     dest: /opt/cni/bin
+#     state: link
+#   become: true
 
 # Looks like this is already done
 # - name: soft-link the kubelet directory
