@@ -3,5 +3,14 @@ collections:
   type: git
   version: v2.24.0
 - name: kubernetes.core
-  version: 2.4.0
+  version: 2.4.1
 - name: community.general
+  version: 8.3.0
+- name: freeipa.ansible_freeipa
+  version: 1.12.1
+- name: community.sops
+  version: 1.6.7
+
+roles:
+- name: geerlingguy.postgresql
+  version: 3.5.0

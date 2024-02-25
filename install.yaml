@@ -1,2 +1,31 @@
+- name: Setup Hosts
+  hosts: all,!localhost
+  roles:
+  - basic-setup
+  tags:
+  - setup
+
+- name: Install FreeIPA server
+  hosts: ipaserver
+  roles:
+  - role: freeipa.ansible_freeipa.ipaserver
+    state: present
+  tags:
+  - idm
+
+- name: Install FreeIPA clients
+  hosts: ipaclients
+  roles:
+  - role: freeipa.ansible_freeipa.ipaclient
+    state: present
+
+- name: Install PostgreSQL Server
+  hosts: postgres
+  roles:
+  - role: geerlingguy.postgresql
+    become: yes
+
 - name: Install Kubernetes
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
+  tags:
+  - k8s

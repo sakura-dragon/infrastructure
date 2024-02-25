@@ -1,0 +1,6 @@
+- name: Setup Hosts
+  hosts: all,!localhost
+  roles:
+  - basic-setup
+  tags:
+  - setup

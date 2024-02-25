@@ -1,0 +1,4 @@
+creation_rules:
+- filename_regex: \.sops\.yaml$
+  path_regex: inventory/group_vars/.*
+  age: 'age1xhf0z0v4swf3sgztpewtdd32u02qatk3dfxswuwekjlcq3agxayqgz76np'

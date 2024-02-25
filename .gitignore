@@ -1,1 +1,4 @@
 .venv
+venv
+ansible/ansible_collections
+ansible/roles

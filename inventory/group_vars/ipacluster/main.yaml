@@ -1,0 +1,2 @@
+ipaserver_domain: "{{ local_domain | lower }}"
+ipaserver_realm: "{{ local_domain | upper }}"

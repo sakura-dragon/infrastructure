@@ -1,0 +1,7 @@
+ipaclient_use_otp: yes
+ipaclient_domain: "{{ ipaserver_domain }}"
+ipaclient_configure_dns_resolver: yes
+ipaclient_dns_servers: "{{ hostvars[groups['ipaserver'][0]]['ansible_default_ipv4']['address'] }}"
+ipaclient_mkhomedir: yes
+ipaclient_no_ntp: yes
+ipasssd_enable_dns_updates: yes

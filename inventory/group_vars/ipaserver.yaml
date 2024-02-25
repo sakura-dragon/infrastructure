@@ -1,0 +1,2 @@
+ipaserver_setup_dns: yes
+ipaserver_auto_forwarders: yes

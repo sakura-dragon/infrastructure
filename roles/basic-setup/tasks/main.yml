@@ -1,0 +1,27 @@
+---
+# tasks file for roles/basic-setup
+
+- name: Run Debian specific setup tasks
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Run Fedora specific setup tasks
+  ansible.builtin.include_tasks: fedora.yml
+  when: ansible_distribution == 'Fedora'
+
+- name: Set timezone to Europe/London
+  community.general.timezone:
+    name: Europe/London
+
+- name: Install qemu-guest-agent
+  ansible.builtin.package:
+    name: qemu-guest-agent
+  when: is_virtual_machine|default('false')|bool
+
+- name: Enable qemu-guest-agent systemd
+  ansible.builtin.systemd_service:
+    name: qemu-guest-agent
+    state: started
+    enabled: true
+  when: is_virtual_machine|default('false')|bool
+  ignore_errors: "{{ ansible_check_mode }}"
