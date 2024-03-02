@@ -1,0 +1,20 @@
+---
+# defaults file for roles/cloudflare_acme
+
+acme_cert_domains: []
+acme_cloudflare_domain: ""
+acme_certificate_common_name: "{{ acme_cert_domains|first }}"
+acme_default_certificate_root_path: "{{ acme_default_certificate_root_path }}"
+acme_account_private_key_path: "{{ acme_default_certificate_root_path }}/acme-private-{{ acme_certificate_common_name }}.key"
+acme_account_email: myself@{{ acme_cert_domains|first }}
+acme_cloudflare_token: ""
+acme_private_key_path: "{{ acme_default_certificate_root_path }}/{{ acme_certificate_common_name }}.key"
+acme_csr_path: "{{ acme_default_certificate_root_path }}/{{ acme_certificate_common_name }}.csr"
+acme_cert_path: "{{ acme_default_certificate_root_path }}/{{ acme_certificate_common_name }}.crt"
+acme_cert_fullchain_path: "{{ acme_default_certificate_root_path }}/{{ acme_certificate_common_name }}-fullchain.crt"
+acme_cert_intermediate_path: "{{ acme_default_certificate_root_path }}/{{ acme_certificate_common_name }}-intermediate.crt"
+acme_challenge_type: dns-01
+# acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+acme_directory: https://acme-v02.api.letsencrypt.org/directory
+# Renew if the certificate is at least 30 days old
+acme_remaining_days: 60

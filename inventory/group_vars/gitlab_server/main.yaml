@@ -1,6 +1,8 @@
 ---
 # Gitlab Server
-gitlab_domain: "gitlab.{{ public_domain }}"
+gitlab_domain: "gitlab.{{ local_domain }}"
+gitlab_pages_domain: "pages.{{ local_domain }}"
+gitlab_registry_domain: "registry.{{ local_domain }}"
 gitlab_config_template: "{{ inventory_dir }}/templates/gitlab.rb"
 gitlab_version: 16.*
 
@@ -12,3 +14,10 @@ disks:
 
 gitlab_keycloak_realm: ""
 keycloak_domain: ""
+
+acme_cert_domains:
+- "{{ gitlab_domain }}"
+- "{{ gitlab_pages_domain }}"
+- "{{ gitlab_registry_domain }}"
+acme_cloudflare_domain: "{{ public_domain }}"
+acme_default_certificate_root_path: "/etc/gitlab/ssl"

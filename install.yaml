@@ -32,8 +32,8 @@
 - name: Install Gitlab Server
   hosts: gitlab_server
   roles:
+  - cloudflare_acme
   - gitlab_server
-  - cloudflared
   tags:
   - gitlab_server
 

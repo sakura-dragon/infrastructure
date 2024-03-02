@@ -1,10 +1,19 @@
 external_url 'https://{{ gitlab_domain }}'
+letsencrypt['enable'] = false
+nginx['redirect_http_to_https'] = true
+nginx['ssl_certificate'] = "/etc/gitlab/ssl/{{ gitlab_domain }}.crt"
+nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/{{ gitlab_domain }}.key"
 
-# Listen on localhost only as running behind cloudflared
-nginx['listen_addresses'] = ["127.0.0.1"]
-registry_nginx['listen_addresses'] = ["127.0.0.1"]
-mattermost_nginx['listen_addresses'] = ["127.0.0.1"]
-pages_nginx['listen_addresses'] = ["127.0.0.1"]
+registry_external_url 'https://{{ gitlab_registry_domain }}'
+registry['enable'] = true
+registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/{{ gitlab_domain }}.crt"
+registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/{{ gitlab_domain }}.key"
+
+pages_external_url "https://{{ gitlab_pages_domain }}/"
+gitlab_pages['enable'] = true
+pages_nginx['ssl_certificate'] = "/etc/gitlab/ssl/{{ gitlab_domain }}.crt"
+pages_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/{{ gitlab_domain }}.key"
+gitlab_pages['namespace_in_path'] = true
 
 # Disable SSH
 gitlab_sshd['enable'] = false
@@ -31,10 +40,6 @@ gitaly['configuration'] = {
     },
   ],
 }
-# Don't think these are needed, but we are running behind a reverse proxy
-letsencrypt['enable'] = false
-nginx['listen_port'] = 80
-nginx['listen_https'] = false
 
 # # Auth
 # gitlab_rails['omniauth_enabled'] = true
@@ -56,6 +61,32 @@ nginx['listen_https'] = false
 #     name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent'
 #   }
 # }]
+# gitlab_rails['ldap_enabled'] = true
+# gitlab_rails['prevent_ldap_sign_in'] = false
+# gitlab_rails['ldap_servers'] = YAML.load <<-'EOS'
+#   main:
+#     label: 'LDAP'
+#     host: 'rigurd.{{ local_domain }}'
+#     port: 389
+#     uid: 'uid'
+#     bind_dn: 'uid={{ gitlab_ldap_user }},cn=users,cn=accounts,{{ ipa_bind_domain_dc_components|join(",") }}'
+#     password: '{{ gitlab_ldap_password }}'
+#     encryption: 'start_tls'
+#     base: 'cn=accounts,{{ ipa_bind_domain_dc_components|join(",") }}'
+#     verify_certificates: false
+#     smartcard_auth: false
+#     active_directory: false
+#     attributes:
+#       username: ['uid']
+#       email: ['mail']
+#       name: 'displayName'
+#       first_name: 'givenName'
+#       last_name: 'sn'
+#     allow_username_or_email_login: false
+#     lowercase_usernames: false
+#     block_auto_created_users: false
+#     user_filter: '(memberof=CN=gitlabusers,CN=groups,CN=accounts,{{ ipa_bind_domain_dc_components|join(",") }})'
+# EOS
 
 # Mount data onto data-disk
 git_data_dirs({"default" => { "path" => "{{ gitlab_root_data_dir }}/git-data"} })

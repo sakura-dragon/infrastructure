@@ -1,0 +1,33 @@
+---
+# tasks file for roles/cloudflare_acme
+
+- name: Get Cloudflare API token
+  ansible.builtin.set_fact:
+    acme_cloudflare_token: "{{ lookup('env', 'CLOUDFLARE_TOKEN') }}"
+  delegate_to: localhost
+  when: acme_cloudflare_token is not defined or acme_cloudflare_token == ""
+  check_mode: false
+
+- name: Check certificate domains
+  ansible.builtin.set_fact:
+    generate_acme_certificates: >-
+      {{ acme_cloudflare_domain is defined and
+      (acme_cert_domains|length > 0) and
+      acme_cloudflare_token is defined and
+      acme_cloudflare_token != "" }}
+  check_mode: false
+
+- name: Ensure certificate directories exist
+  ansible.builtin.file:
+    path: "{{ item | dirname }}"
+    state: directory
+  loop:
+  - "{{ acme_account_private_key_path }}"
+  - "{{ acme_csr_path }}"
+  - "{{ acme_cert_path }}"
+  - "{{ acme_cert_fullchain_path }}"
+  - "{{ acme_cert_intermediate_path }}"
+
+- name: Generate certificates
+  ansible.builtin.include_tasks: acme.yml
+  when: generate_acme_certificates

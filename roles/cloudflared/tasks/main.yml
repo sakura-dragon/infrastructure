@@ -8,6 +8,7 @@
 - name: Install cloudflared.
   ansible.builtin.apt:
     deb: /tmp/cloudflared-linux-amd64.deb
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Create a cloudflared service directory.
   ansible.builtin.file:
@@ -27,3 +28,4 @@
     enabled: true
     masked: no
   when: cf_tunnel_token is defined
+  ignore_errors: "{{ ansible_check_mode }}"

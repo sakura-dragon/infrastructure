@@ -10,6 +10,8 @@ collections:
   version: 1.12.1
 - name: community.sops
   version: 1.6.7
+- name: community.crypto
+  version: 2.18.0
 
 roles:
 - name: geerlingguy.postgresql

@@ -1,0 +1,82 @@
+---
+# tasks file for roles/cloudflare_acme
+
+- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+  community.crypto.openssl_privatekey:
+    path: "{{ item }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  loop:
+  - "{{ acme_private_key_path }}"
+  - "{{ acme_account_private_key_path }}"
+
+- name: Generate an OpenSSL CSR with subjectAltName extension
+  community.crypto.openssl_csr:
+    path: "{{ acme_csr_path }}"
+    privatekey_path: "{{ acme_private_key_path }}"
+    common_name: "{{ acme_certificate_common_name }}"
+    subject_alt_name: "{{ item.value | map('regex_replace', '^', 'DNS:') | list }}"
+  with_dict:
+    dns_server: "{{ acme_cert_domains | unique }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create a challenge using a account key file.
+  community.crypto.acme_certificate:
+    account_key_src: "{{ acme_account_private_key_path }}"
+    account_email: "{{ acme_account_email }}"
+    src: "{{ acme_csr_path }}"
+    cert: "{{ acme_cert_path }}"
+    challenge: "{{ acme_challenge_type }}"
+    acme_directory: "{{ acme_directory }}"
+    # Renew if the certificate is at least 30 days old
+    remaining_days: "{{ acme_remaining_days }}"
+    acme_version: 2
+    terms_agreed: true
+  register: acme_challenge
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create TXT record
+  community.general.cloudflare_dns:
+    zone: "{{ acme_cloudflare_domain }}"
+    record: "{{ item.key }}"
+    type: TXT
+    ttl: 60
+    api_token: "{{ acme_cloudflare_token }}"
+    state: present
+    value: "{{ item.value | map('regex_replace', '^(.*)$', '\"\\1\"' ) | list | first }}"
+  loop: "{{ acme_challenge.challenge_data_dns | dict2items }}"
+  when: acme_challenge is changed
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Pause for DNS to propagate
+  ansible.builtin.pause:
+    seconds: 10
+  when: acme_challenge is changed
+
+- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  community.crypto.acme_certificate:
+    account_key_src: "{{ acme_account_private_key_path }}"
+    account_email: "{{ acme_account_email }}"
+    src: "{{ acme_csr_path }}"
+    cert: "{{ acme_cert_path }}"
+    fullchain: "{{ acme_cert_fullchain_path }}"
+    chain: "{{ acme_cert_intermediate_path }}"
+    challenge: "{{ acme_challenge_type }}"
+    acme_directory: "{{ acme_directory }}"
+    remaining_days: "{{ acme_remaining_days }}"
+    data: "{{ acme_challenge }}"
+    acme_version: 2
+    terms_agreed: true
+  when: acme_challenge is changed
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Delete TXT record
+  community.general.cloudflare_dns:
+    zone: "{{ acme_cloudflare_domain }}"
+    record: "{{ item.key }}"
+    type: TXT
+    api_token: "{{ acme_cloudflare_token }}"
+    state: absent
+    value: "{{ item.value | map('regex_replace', '^(.*)$', '\"\\1\"' ) | list | first }}"
+  loop: "{{ acme_challenge.challenge_data_dns | dict2items }}"
+  when: acme_challenge is changed
+  ignore_errors: "{{ ansible_check_mode }}"
