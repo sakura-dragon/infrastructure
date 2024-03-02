@@ -1,0 +1,4 @@
+---
+# defaults file for roles/gitlab-server
+gitlab_version: "*"
+gitlab_config_template: gitlab.rb.j2

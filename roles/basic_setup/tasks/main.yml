@@ -1,5 +1,5 @@
 ---
-# tasks file for roles/basic-setup
+# tasks file for roles/basic_setup
 
 - name: Run Debian specific setup tasks
   ansible.builtin.include_tasks: debian.yml

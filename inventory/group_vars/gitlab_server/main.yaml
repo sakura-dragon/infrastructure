@@ -1,0 +1,14 @@
+---
+# Gitlab Server
+gitlab_domain: "gitlab.{{ public_domain }}"
+gitlab_config_template: "{{ inventory_dir }}/templates/gitlab.rb"
+gitlab_version: 16.*
+
+gitlab_root_data_dir: /mnt/gitlab/data
+
+disks:
+- device: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
+  mount_path: /mnt/gitlab
+
+gitlab_keycloak_realm: ""
+keycloak_domain: ""

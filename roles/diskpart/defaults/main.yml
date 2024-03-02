@@ -1,0 +1,6 @@
+---
+# defaults file for roles/diskpart
+diskpart_partition_num: 1
+diskpart_state: mounted
+diskpart_fs_type: ext4
+diskpart_mount_opts: ""

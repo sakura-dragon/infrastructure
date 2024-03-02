@@ -1,0 +1,29 @@
+---
+# tasks file for roles/cloudflared
+- name: Download the cloudflared Linux package.
+  ansible.builtin.get_url:
+    url: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+    dest: /tmp/cloudflared-linux-amd64.deb
+
+- name: Install cloudflared.
+  ansible.builtin.apt:
+    deb: /tmp/cloudflared-linux-amd64.deb
+
+- name: Create a cloudflared service directory.
+  ansible.builtin.file:
+    path: /etc/cloudflared/
+    state: directory
+
+- name: Install cloudflared as a systemd service.
+  ansible.builtin.shell: cloudflared service install {{ cf_tunnel_token }}
+  args:
+    creates: /etc/systemd/system/cloudflared.service
+  when: cf_tunnel_token is defined
+
+- name: Start the tunnel.
+  ansible.builtin.systemd:
+    name: cloudflared
+    state: started
+    enabled: true
+    masked: no
+  when: cf_tunnel_token is defined

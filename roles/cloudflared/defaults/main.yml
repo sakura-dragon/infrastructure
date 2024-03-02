@@ -1,0 +1,10 @@
+---
+# defaults file for roles/cloudflared
+cf_tunnel_domain: ""
+cf_tunnel_port: "80"
+cf_tunnel_schema: "http"
+
+cf_tunnel_account: ""
+cf_tunnel_id: ""
+cf_tunnel_name: ""
+cf_tunnel_secret: ""

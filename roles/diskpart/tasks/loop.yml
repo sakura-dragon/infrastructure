@@ -1,0 +1,42 @@
+---
+# tasks file for roles/diskpart
+
+- name: Configure disk partition
+  community.general.parted:
+    device: "{{ _diskpart_device }}"
+    number: "{{ _diskpart_partition_num }}"
+    state: "{% if _diskpart_state != 'absent' %}present{% else %}absent{% endif %}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Format disk partition
+  community.general.filesystem:
+    fstype: "{{ _diskpart_fs_type }}"
+    dev: "{{ _diskpart_device }}-part{{ _diskpart_partition_num }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Get partition UUID
+  ansible.builtin.command: blkid {{ _diskpart_device }}-part{{ _diskpart_partition_num }} -s UUID -o value
+  register: _diskpart_blkid_partition_uuid_output
+  when: _diskpart_state != 'absent'
+  check_mode: false
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Check partition UUID
+  ansible.builtin.set_fact:
+    diskpart_blkid_partition_id: "UUID={{ _diskpart_blkid_partition_uuid_output.stdout_lines|first }}"
+  failed_when: _diskpart_blkid_partition_uuid_output.stdout_lines|length != 1
+  when: _diskpart_state != 'absent'
+
+- name: Create directory [{{ _diskpart_mount_path }}]
+  ansible.builtin.file:
+    path: "{{ _diskpart_mount_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Mount partition
+  ansible.posix.mount:
+    path: "{{ _diskpart_mount_path }}"
+    src: "{{ diskpart_blkid_partition_id }}"
+    fstype: "{{ _diskpart_fs_type }}"
+    state: "{{ _diskpart_state }}"
+  ignore_errors: "{{ ansible_check_mode }}"

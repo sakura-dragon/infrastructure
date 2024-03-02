@@ -1,5 +1,5 @@
 ---
-# file: basic-setup/tasks/debian.yml
+# file: basic_setup/tasks/debian.yml
 
 - name: Update apt cache
   ansible.builtin.apt:

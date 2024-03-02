@@ -1,0 +1,63 @@
+---
+# tasks file for roles/gitlab-server
+- name: Install Gitlab dependencies
+  ansible.builtin.apt:
+    pkg:
+    - curl
+    - openssh-server
+    - ca-certificates
+    - perl
+    - postfix
+
+- name: Download APT Repository script
+  ansible.builtin.get_url:
+    url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+    dest: /tmp/gitlab-server-script.deb.sh
+    mode: 0744
+
+- name: Add Gitlab APT Repository
+  ansible.builtin.shell:
+    cmd: /tmp/gitlab-server-script.deb.sh
+    creates: /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+  args:
+    executable: /bin/bash
+
+- name: Pin Gitlab server version
+  ansible.builtin.copy:
+    content: |
+      Explanation: Prefer GitLab provided packages over the Debian native ones
+      Package: gitlab-ce
+      Pin: origin packages.gitlab.com, version {{ gitlab_version }}
+      Pin-Priority: 1001
+    dest: /etc/apt/preferences.d/pin-gitlab-server.pref
+
+- name: Ensure Gitlab config directory exists
+  ansible.builtin.file:
+    path: /etc/gitlab
+    state: directory
+
+- name: Install Gitlab
+  ansible.builtin.apt:
+    pkg: gitlab-ce
+  register: gitlab_server_package
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Template Gitlab Configuration file
+  ansible.builtin.template:
+    src: "{{ gitlab_config_template }}"
+    dest: /etc/gitlab/gitlab.rb
+    owner: root
+    group: root
+    mode: '0600'
+    # validate: gitlab-rake gitlab:check
+    backup: yes
+  register: gitlab_server_template
+
+- name: Reconfigure Gitlab
+  ansible.builtin.shell:
+    cmd: gitlab-ctl reconfigure
+  args:
+    executable: /bin/bash
+  when:
+  - gitlab_server_package.changed
+  - gitlab_server_template.changed

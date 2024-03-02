@@ -1,7 +1,8 @@
 - name: Setup Hosts
   hosts: all,!localhost
   roles:
-  - basic-setup
+  - basic_setup
+  - diskpart
   tags:
   - setup
 
@@ -18,12 +19,23 @@
   roles:
   - role: freeipa.ansible_freeipa.ipaclient
     state: present
+  tags:
+  - idm_clients
 
 - name: Install PostgreSQL Server
   hosts: postgres
   roles:
-  - role: geerlingguy.postgresql
-    become: yes
+  - geerlingguy.postgresql
+  tags:
+  - postgres
+
+- name: Install Gitlab Server
+  hosts: gitlab_server
+  roles:
+  - gitlab_server
+  - cloudflared
+  tags:
+  - gitlab_server
 
 - name: Install Kubernetes
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster

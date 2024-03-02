@@ -1,6 +1,6 @@
 - name: Setup Hosts
   hosts: all,!localhost
   roles:
-  - basic-setup
+  - basic_setup
   tags:
   - setup

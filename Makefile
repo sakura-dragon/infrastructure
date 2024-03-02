@@ -11,15 +11,18 @@ ansible/ansible_collections: venv/bin/ansible requirements.yaml ansible/roles
 	venv/bin/ansible-galaxy install -r requirements.yaml
 
 facts: ansible/ansible_collections
-	venv/bin/ansible-playbook facts.yaml --become
+	venv/bin/ansible-playbook facts.yaml --diff --become
 
 install: ansible/ansible_collections
-	venv/bin/ansible-playbook install.yaml --become
+	venv/bin/ansible-playbook install.yaml --diff --become
+
+check: ansible/ansible_collections
+	venv/bin/ansible-playbook install.yaml --diff --become --check
 
 update: ansible/ansible_collections
-	venv/bin/ansible-playbook update.yaml --become
+	venv/bin/ansible-playbook update.yaml --diff --become
 
 upgrade: ansible/ansible_collections
-	venv/bin/ansible-playbook upgrade.yaml --become
+	venv/bin/ansible-playbook upgrade.yaml --diff --become
 
-.PHONY: facts install update upgrade
+.PHONY: facts check install update upgrade

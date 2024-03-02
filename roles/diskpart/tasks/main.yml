@@ -1,0 +1,17 @@
+---
+# tasks file for roles/diskpart
+- name: Ensure [parted] is installed
+  ansible.builtin.package:
+    name: parted
+
+- name: Configure disks
+  ansible.builtin.include_tasks: loop.yml
+  loop: "{{ disks }}"
+  vars:
+    _diskpart_device: "{{ item.device }}"
+    _diskpart_mount_path: "{{ item.mount_path }}"
+    _diskpart_partition_num: "{{ item.partition_num | default(diskpart_partition_num) }}"
+    _diskpart_state: "{{ item.state | default(diskpart_state) }}"
+    _diskpart_fs_type: "{{ item.fs_type | default(diskpart_fs_type) }}"
+    _diskpart_mount_opts: "{{ item.mount_opts | default(diskpart_mount_opts) }}"
+  when: disks is defined
