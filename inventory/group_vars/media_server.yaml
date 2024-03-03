@@ -1,0 +1,14 @@
+nfs_rpcbind_state: started
+nfs_rpcbind_enabled: true
+
+nfs_exports:
+- "/mnt/cache    *(rw,sync,no_root_squash)"
+- "/mnt/media    *(rw,sync,no_root_squash)"
+
+disks:
+- device: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
+  mount_path: /mnt/cache
+  fs_type: xfs
+- device: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2
+  mount_path: /mnt/media
+  fs_type: xfs

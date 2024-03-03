@@ -42,3 +42,11 @@
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
   tags:
   - k8s
+
+- name: Install Media Server
+  hosts: media_server
+  roles:
+  - plex
+  - geerlingguy.nfs
+  tags:
+  - media_server

@@ -4,6 +4,14 @@
   ansible.builtin.package:
     name: parted
 
+- name: Ensure [xfsprogs] is installed
+  ansible.builtin.package:
+    name: xfsprogs
+  when:
+  - disks is defined
+  - disks | selectattr('fs_type','defined')
+  - disks | selectattr('fs_type','equalto','xfs') | default([]) | list | count > 0
+
 - name: Configure disks
   ansible.builtin.include_tasks: loop.yml
   loop: "{{ disks }}"
@@ -14,4 +22,5 @@
     _diskpart_state: "{{ item.state | default(diskpart_state) }}"
     _diskpart_fs_type: "{{ item.fs_type | default(diskpart_fs_type) }}"
     _diskpart_mount_opts: "{{ item.mount_opts | default(diskpart_mount_opts) }}"
+    _diskpart_force: "{{ item.force | default(diskpart_force) | bool }}"
   when: disks is defined

@@ -1,0 +1,5 @@
+---
+# defaults file for roles/plex
+plex_deb_repo_url: "https://downloads.plex.tv/repo/deb "
+plex_deb_repo_key_url: "https://downloads.plex.tv/plex-keys/PlexSign.key"
+plex_deb_repo_key: "/etc/apt/keyrings/plexmediaserver.asc"

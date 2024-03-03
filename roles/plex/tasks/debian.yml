@@ -1,0 +1,28 @@
+---
+- name: Add Plex repository key
+  ansible.builtin.get_url:
+    url: "{{ plex_deb_repo_key_url }}"
+    dest: "{{ plex_deb_repo_key }}"
+    mode: '0644'
+    force: true
+
+- name: Configure Plex repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by={{ plex_deb_repo_key }}] {{ plex_deb_repo_url }} public main"
+    state: present
+    update_cache: false
+  register: status_plex_repo
+
+- name: Install Plex Server
+  ansible.builtin.apt:
+    name: plexmediaserver
+    state: present
+    update_cache: "{{ status_plex_repo.changed }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Start and enable Plex service
+  ansible.builtin.service:
+    name: plexmediaserver
+    state: started
+    enabled: true
+  ignore_errors: "{{ ansible_check_mode }}"

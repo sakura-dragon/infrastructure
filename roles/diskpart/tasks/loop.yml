@@ -12,6 +12,7 @@
   community.general.filesystem:
     fstype: "{{ _diskpart_fs_type }}"
     dev: "{{ _diskpart_device }}-part{{ _diskpart_partition_num }}"
+    force: "{{ _diskpart_force }}"
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Get partition UUID
@@ -39,4 +40,5 @@
     src: "{{ diskpart_blkid_partition_id }}"
     fstype: "{{ _diskpart_fs_type }}"
     state: "{{ _diskpart_state }}"
+    opts: "{{ _diskpart_mount_opts }}"
   ignore_errors: "{{ ansible_check_mode }}"

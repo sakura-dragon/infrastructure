@@ -7,22 +7,22 @@ venv/bin/python:
 venv/bin/ansible: venv/bin/python requirements.txt
 	venv/bin/pip install -r requirements.txt
 
-ansible/ansible_collections: venv/bin/ansible requirements.yaml ansible/roles
+ansible: venv/bin/ansible requirements.yaml
 	venv/bin/ansible-galaxy install -r requirements.yaml
 
-facts: ansible/ansible_collections
+facts: ansible
 	venv/bin/ansible-playbook facts.yaml --diff --become
 
-install: ansible/ansible_collections
+install: ansible
 	venv/bin/ansible-playbook install.yaml --diff --become
 
-check: ansible/ansible_collections
+check: ansible
 	venv/bin/ansible-playbook install.yaml --diff --become --check
 
-update: ansible/ansible_collections
+update: ansible
 	venv/bin/ansible-playbook update.yaml --diff --become
 
-upgrade: ansible/ansible_collections
+upgrade: ansible
 	venv/bin/ansible-playbook upgrade.yaml --diff --become
 
 .PHONY: facts check install update upgrade

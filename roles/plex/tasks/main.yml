@@ -1,0 +1,6 @@
+---
+# tasks file for roles/plex
+
+- name: Run Debian specific Plex tasks
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
