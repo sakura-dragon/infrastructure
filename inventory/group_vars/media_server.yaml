@@ -3,7 +3,7 @@ nfs_rpcbind_enabled: true
 
 nfs_exports:
 - "/mnt/cache    *(rw,sync,no_root_squash)"
-- "/mnt/media    *(rw,sync,no_root_squash)"
+- "/mnt/media    *(r,sync,no_root_squash)"
 
 disks:
 - device: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
@@ -12,3 +12,19 @@ disks:
 - device: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2
   mount_path: /mnt/media
   fs_type: xfs
+
+plex_media_file_owner: plex
+
+plex_media_directories:
+- path: /mnt/media/movies
+- path: /mnt/media/music
+- path: /mnt/media/series
+- path: /mnt/media/other
+- path: /mnt/cache/movies
+  mode: 777
+- path: /mnt/cache/music
+  mode: 777
+- path: /mnt/cache/series
+  mode: 777
+- path: /mnt/cache/recorded/movies
+- path: /mnt/cache/recorded/series

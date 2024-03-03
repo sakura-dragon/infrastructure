@@ -4,3 +4,15 @@
 - name: Run Debian specific Plex tasks
   ansible.builtin.include_tasks: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Create Plex Media directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    recurse: true
+    mode: "{{ item.mode | default(plex_media_file_mode)}}"
+    owner: "{{ item.owner | default(plex_media_file_owner) }}"
+    group: "{{ item.group | default(plex_media_file_group) }}"
+  loop: "{{ plex_media_directories }}"
+  loop_control:
+    label: "{{ item.path }}"
