@@ -13,8 +13,6 @@ disks:
   mount_path: /mnt/media
   fs_type: xfs
 
-plex_media_file_owner: plex
-
 plex_media_directories:
 - path: /mnt/media/movies
 - path: /mnt/media/music
@@ -27,4 +25,6 @@ plex_media_directories:
 - path: /mnt/cache/series
   mode: 777
 - path: /mnt/cache/recorded/movies
+  owner: plex
 - path: /mnt/cache/recorded/series
+  owner: plex
