@@ -18,29 +18,6 @@ gitlab_pages['namespace_in_path'] = true
 # Disable SSH
 gitlab_sshd['enable'] = false
 
-# Restrict Resource Usage
-puma['worker_processes'] = 0
-sidekiq['max_concurrency'] = 10
-gitlab_rails['env'] = {
-  'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000'
-}
-gitaly['env'] = {
-'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000',
-'GITALY_COMMAND_SPAWN_MAX_PARALLEL' => '2'
-}
-gitaly['configuration'] = {
-  concurrency: [
-    {
-      rpc: '/gitaly.SmartHTTPService/PostReceivePack',
-      max_per_repo: 3,
-    },
-    {
-      rpc: '/gitaly.SSHService/SSHUploadPack',
-      max_per_repo: 3,
-    },
-  ],
-}
-
 # # Auth
 # gitlab_rails['omniauth_enabled'] = true
 # gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
@@ -93,3 +70,5 @@ git_data_dirs({"default" => { "path" => "{{ gitlab_root_data_dir }}/git-data"} }
 gitlab_rails['uploads_directory'] = '{{ gitlab_root_data_dir }}/uploads'
 gitlab_rails['shared_path'] = '{{ gitlab_root_data_dir }}/shared'
 gitlab_ci['builds_directory'] = '{{ gitlab_root_data_dir }}/builds'
+
+gitlab_rails['backup_path'] = '{{ gitlab_backup_data_dir }}'

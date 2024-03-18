@@ -8,6 +8,7 @@
     - ca-certificates
     - perl
     - postfix
+    - rsync
 
 - name: Download APT Repository script
   ansible.builtin.get_url:
@@ -61,3 +62,10 @@
   when:
   - gitlab_server_package.changed
   - gitlab_server_template.changed
+
+- name: Configure backups in crontab
+  ansible.builtin.cron:
+    name: "Backup Gitlab"
+    minute: "0"
+    hour: "5"
+    job: "/opt/gitlab/bin/gitlab-backup create CRON=1 INCREMENTAL=yes SKIP=tar"

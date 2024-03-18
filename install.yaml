@@ -47,6 +47,5 @@
   hosts: media_server
   roles:
   - plex
-  - geerlingguy.nfs
   tags:
   - media_server

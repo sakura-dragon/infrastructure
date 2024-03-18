@@ -1,6 +1,10 @@
 ---
 # tasks file for roles/cloudflare_acme
 
+- name: Ensure cryptography package is installed
+  ansible.builtin.package:
+    name: python3-cryptography
+
 - name: Get Cloudflare API token
   ansible.builtin.set_fact:
     acme_cloudflare_token: "{{ lookup('env', 'CLOUDFLARE_TOKEN') }}"
