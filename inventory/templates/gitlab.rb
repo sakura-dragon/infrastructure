@@ -38,32 +38,27 @@ gitlab_sshd['enable'] = false
 #     name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent'
 #   }
 # }]
-# gitlab_rails['ldap_enabled'] = true
-# gitlab_rails['prevent_ldap_sign_in'] = false
-# gitlab_rails['ldap_servers'] = YAML.load <<-'EOS'
-#   main:
-#     label: 'LDAP'
-#     host: 'rigurd.{{ local_domain }}'
-#     port: 389
-#     uid: 'uid'
-#     bind_dn: 'uid={{ gitlab_ldap_user }},cn=users,cn=accounts,{{ ipa_bind_domain_dc_components|join(",") }}'
-#     password: '{{ gitlab_ldap_password }}'
-#     encryption: 'start_tls'
-#     base: 'cn=accounts,{{ ipa_bind_domain_dc_components|join(",") }}'
-#     verify_certificates: false
-#     smartcard_auth: false
-#     active_directory: false
-#     attributes:
-#       username: ['uid']
-#       email: ['mail']
-#       name: 'displayName'
-#       first_name: 'givenName'
-#       last_name: 'sn'
-#     allow_username_or_email_login: false
-#     lowercase_usernames: false
-#     block_auto_created_users: false
-#     user_filter: '(memberof=CN=gitlabusers,CN=groups,CN=accounts,{{ ipa_bind_domain_dc_components|join(",") }})'
-# EOS
+
+# https://gitlab.com/gitlab-org/gitlab/-/issues/391298
+gitlab_rails['ldap_enabled'] = true
+gitlab_rails['ldap_servers'] = YAML.load <<-'EOS'
+   main:
+     label: 'LDAP'
+     host: 'rigurd.{{ local_domain }}'
+     port: 636
+     uid: 'uid'
+     bind_dn: 'uid={{ gitlab_ldap_user }},cn=users,cn=accounts,{{ gitlab_ldap_suffix }}'
+     password: '{{ gitlab_ldap_password }}'
+     encryption: 'simple_tls'
+     verify_certificates: false
+     smartcard_auth: false
+     active_directory: false
+     allow_username_or_email_login: false
+     lowercase_usernames: false
+     block_auto_created_users: false
+     base: '{{ gitlab_ldap_suffix }}'
+     user_filter: 'memberof=cn=gitlab-user,cn=groups,cn=accounts,{{ gitlab_ldap_suffix }}'
+EOS
 
 # Mount data onto data-disk
 git_data_dirs({"default" => { "path" => "{{ gitlab_root_data_dir }}/git-data"} })
