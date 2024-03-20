@@ -19,10 +19,3 @@
     state: present
     update_cache: "{{ status_hc_vault_server_repo.changed }}"
   ignore_errors: "{{ ansible_check_mode }}"
-
-# - name: Start and enable Hashicorp service
-#   ansible.builtin.service:
-#     name: vault
-#     state: started
-#     enabled: true
-#   ignore_errors: "{{ ansible_check_mode }}"

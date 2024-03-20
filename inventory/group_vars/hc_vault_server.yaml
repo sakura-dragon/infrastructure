@@ -1,6 +1,9 @@
 vault_domain: vault.{{ local_domain }}
+hc_vault_server_config_template: "{{ inventory_dir }}/templates/hc_vault.hcl"
 
 acme_cert_domains:
 - "{{ vault_domain }}"
 acme_cloudflare_domain: "{{ public_domain }}"
-acme_default_certificate_root_path: "/opt/vault/tls/"
+acme_default_certificate_root_path: "/opt/vault/tls"
+hc_vault_extra_dirs:
+- "{{ acme_default_certificate_root_path }}"

@@ -5,5 +5,10 @@ hc_vault_server_deb_repo_key_url: "https://apt.releases.hashicorp.com/gpg"
 hc_vault_server_deb_repo_key: "/etc/apt/keyrings/hashicorp-archive-keyring.asc"
 
 hc_vault_server_config_template: config.hcl.j2
-hc_vault_config_dir: /etc/vault.d/
+hc_vault_config_dir: /etc/vault.d
+hc_vault_config_file: "{{ hc_vault_config_dir }}/vault.hcl"
 hc_vault_data_dir: /opt/vault/data
+hc_vault_extra_dirs: []
+
+hc_vault_run_as_user: vault
+hc_vault_run_as_group: vault

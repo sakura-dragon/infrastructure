@@ -5,22 +5,27 @@
   ansible.builtin.include_tasks: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-# - name: Ensure Hashicorp Vault directories exists
-#   ansible.builtin.file:
-#     path: "{{ item }}"
-#     state: directory
-#     owner: vault
-#     group: vault
-#     recurse: true
-#   loop:
-#   - "{{ hc_vault_config_dir }}"
-#   - "{{ hc_vault_data_dir }}"
+- name: Template Hashicorp Vault Configuration file
+  ansible.builtin.template:
+    src: "{{ hc_vault_server_config_template }}"
+    dest: "{{ hc_vault_config_file }}"
+    owner: "{{ hc_vault_run_as_user }}"
+    group: "{{ hc_vault_run_as_group }}"
+    mode: '0600'
+    backup: yes
 
-# - name: Template Hashicorp Vault Configuration file
-#   ansible.builtin.template:
-#     src: "{{ hc_vault_server_config_template }}"
-#     dest: "{{ hc_vault_config_dir }}/config.hcl"
-#     owner: vault
-#     group: vault
-#     mode: '0600'
-#     backup: yes
+- name: Ensure Hashicorp Vault directories permissions
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ hc_vault_run_as_user }}"
+    group: "{{ hc_vault_run_as_group }}"
+    recurse: true
+  loop: "{{ hc_vault_extra_dirs + [ hc_vault_config_dir, hc_vault_data_dir ] }}"
+
+- name: Start and enable Hashicorp service
+  ansible.builtin.service:
+    name: vault
+    state: started
+    enabled: true
+  ignore_errors: "{{ ansible_check_mode }}"
