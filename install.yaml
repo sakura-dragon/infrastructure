@@ -23,13 +23,6 @@
   tags:
   - idm_clients
 
-- name: Install PostgreSQL Server
-  hosts: postgres
-  roles:
-  - geerlingguy.postgresql
-  tags:
-  - postgres
-
 - name: Install Gitlab Server
   hosts: gitlab_server
   roles:
@@ -37,6 +30,14 @@
   - gitlab_server
   tags:
   - gitlab_server
+
+- name: Install Hashicorp Vault Server
+  hosts: hc_vault_server
+  roles:
+  - cloudflare_acme
+  - hc_vault_server
+  tags:
+  - hc_vault_server
 
 - name: Install Kubernetes
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster

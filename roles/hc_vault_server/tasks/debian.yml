@@ -1,0 +1,28 @@
+---
+- name: Add Hashicorp repository key
+  ansible.builtin.get_url:
+    url: "{{ hc_vault_server_deb_repo_key_url }}"
+    dest: "{{ hc_vault_server_deb_repo_key }}"
+    mode: '0644'
+    force: true
+
+- name: Configure Hashicorp repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by={{ hc_vault_server_deb_repo_key }}] {{ hc_vault_server_deb_repo_url }} {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: false
+  register: status_hc_vault_server_repo
+
+- name: Install Hashicorp Server
+  ansible.builtin.apt:
+    name: vault
+    state: present
+    update_cache: "{{ status_hc_vault_server_repo.changed }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# - name: Start and enable Hashicorp service
+#   ansible.builtin.service:
+#     name: vault
+#     state: started
+#     enabled: true
+#   ignore_errors: "{{ ansible_check_mode }}"

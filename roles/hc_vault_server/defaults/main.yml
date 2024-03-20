@@ -1,0 +1,9 @@
+---
+# defaults file for roles/hc_vault_server
+hc_vault_server_deb_repo_url: "https://apt.releases.hashicorp.com"
+hc_vault_server_deb_repo_key_url: "https://apt.releases.hashicorp.com/gpg"
+hc_vault_server_deb_repo_key: "/etc/apt/keyrings/hashicorp-archive-keyring.asc"
+
+hc_vault_server_config_template: config.hcl.j2
+hc_vault_config_dir: /etc/vault.d/
+hc_vault_data_dir: /opt/vault/data

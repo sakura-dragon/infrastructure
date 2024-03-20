@@ -1,0 +1,6 @@
+vault_domain: vault.{{ local_domain }}
+
+acme_cert_domains:
+- "{{ vault_domain }}"
+acme_cloudflare_domain: "{{ public_domain }}"
+acme_default_certificate_root_path: "/opt/vault/tls/"
