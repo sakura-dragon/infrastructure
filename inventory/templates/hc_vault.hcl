@@ -1,8 +1,10 @@
 ui            = true
-api_addr      = "https://0.0.0.0:8200"
+api_addr      = "https://{{ vault_domain }}:8200"
+cluster_addr = "http://127.0.0.1:8201"
 
-storage "file" {
-  path = "{{ hc_vault_data_dir }}"
+storage "raft" {
+  path    = "{{ hc_vault_data_dir }}"
+  node_id = "node1"
 }
 
 listener "tcp" {
