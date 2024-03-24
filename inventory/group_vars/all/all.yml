@@ -1,5 +1,6 @@
 ---
 acme_account_email: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/acme:account_email') }}"
+acme_cloudflare_token: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/acme:cloudflare_token') }}"
 pbs_finger_print: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/pbs:finger_print') }}"
 
 ## Directory where the binaries will be installed
