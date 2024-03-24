@@ -1,4 +1,7 @@
 ---
+acme_account_email: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/acme:account_email') }}"
+pbs_finger_print: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/pbs:finger_print') }}"
+
 ## Directory where the binaries will be installed
 bin_dir: /usr/local/bin
 

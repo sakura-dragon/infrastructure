@@ -1,0 +1,2 @@
+ipaadmin_password: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/freeipa_admin_passswords:ipaadmin_password') }}"
+ipadm_password: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/freeipa_admin_passswords:ipadm_password') }}"
