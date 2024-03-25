@@ -4,7 +4,7 @@ gitlab_domain: "gitlab.{{ local_domain }}"
 gitlab_pages_domain: "pages.{{ local_domain }}"
 gitlab_registry_domain: "registry.{{ local_domain }}"
 gitlab_config_template: "{{ inventory_dir }}/templates/gitlab.rb"
-gitlab_version: 16.*
+gitlab_version: 16.9.*
 
 gitlab_ldap_user: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/gitlab_server:ldap_user') }}"
 gitlab_ldap_password: "{{ lookup('community.hashi_vault.hashi_vault', 'internal/data/gitlab_server:ldap_password') }}"
