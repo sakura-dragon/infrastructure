@@ -39,11 +39,6 @@
   tags:
   - hc_vault_server
 
-- name: Install Kubernetes
-  ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
-  tags:
-  - k8s
-
 - name: Install Media Server
   hosts: media_server
   roles:
