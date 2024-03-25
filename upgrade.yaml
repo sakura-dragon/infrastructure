@@ -1,4 +1,6 @@
+---
+- name: Main site playbook
+  ansible.builtin.import_playbook: site.yaml
+
 - name: Upgrade Kubernetes
-  ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
-  vars:
-    upgrade_cluster_setup: true
+  ansible.builtin.import_playbook: kubernetes_sigs.kubespray.upgrade_cluster
