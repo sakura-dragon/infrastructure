@@ -16,13 +16,13 @@ facts: ansible
 install: ansible
 	venv/bin/ansible-playbook install.yaml --diff --become
 
-check: ansible
+check-install: ansible
 	venv/bin/ansible-playbook install.yaml --diff --become --check
-
-update: ansible
-	venv/bin/ansible-playbook update.yaml --diff --become
 
 upgrade: ansible
 	venv/bin/ansible-playbook upgrade.yaml --diff --become
 
-.PHONY: facts check install update upgrade
+check-upgrade: ansible
+	venv/bin/ansible-playbook upgrade.yaml --diff --become --check
+
+.PHONY: facts check-install check-upgrade install upgrade
