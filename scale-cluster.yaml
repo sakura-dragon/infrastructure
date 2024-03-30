@@ -1,0 +1,2 @@
+- name: Scale Cluster
+  ansible.builtin.import_playbook: kubernetes_sigs.kubespray.scale
