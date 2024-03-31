@@ -6,26 +6,3 @@
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
   tags:
   - k8s
-
-- name: Configure FluxCD cluster manifests
-  hosts: localhost
-  tags:
-  - k8s-manifests
-  vars:
-    kubeconfig_file: "{{ inventory_dir }}/artifacts/admin.conf"
-    ansible_python_interpreter: "{{ playbook_dir }}/venv/bin/python"
-  tasks:
-
-  - name: Check if k8s kubeconfig file exists on controller host
-    ansible.builtin.stat:
-      path: "{{ kubeconfig_file }}"
-    register: stat_kubeconfig
-
-  - name: Apply FluxCD manifests
-    kubernetes.core.k8s:
-      state: present
-      definition: "{{ lookup('kubernetes.core.kustomize', dir=fluxcd_manifest_dir) }}"
-      kubeconfig: "{{ kubeconfig_file }}"
-    when: stat_kubeconfig.stat.exists
-    vars:
-      fluxcd_manifest_dir: "{{ playbook_dir }}/kubernetes/manifests/flux-system"
